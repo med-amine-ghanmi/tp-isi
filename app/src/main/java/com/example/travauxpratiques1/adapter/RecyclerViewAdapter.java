@@ -15,10 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travauxpratiques1.R;
 import com.example.travauxpratiques1.model.Article;
+import com.example.travauxpratiques1.ui.ArticleDetailActivity;
 import com.example.travauxpratiques1.ui.SecondActivity;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
@@ -50,16 +54,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.newsDescription.setText(articlesList.get(position).getAuthor());
         holder.newsDate.setText(articlesList.get(position).getPublishedAt().toString());
 
-//        holder.container.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent secondActivityIntent = new Intent(context, SecondActivity.class);
-//                secondActivityIntent.putExtra("position", position);
-//                secondActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                activity.startActivityForResult(secondActivityIntent, 0);
-//            }
-//        });
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent articleDetailIntent = new Intent(context, ArticleDetailActivity.class);
 
+                articleDetailIntent.putExtra("imageUrl", articlesList.get(position).urlToImage);
+                articleDetailIntent.putExtra("author", articlesList.get(position).author);
+                articleDetailIntent.putExtra("title", articlesList.get(position).title);
+                articleDetailIntent.putExtra("description", articlesList.get(position).description);
+                articleDetailIntent.putExtra("content", articlesList.get(position).content);
+                articleDetailIntent.putExtra("publishedAt", convertLongToStringDate(articlesList.get(position).publishedAt));
+                articleDetailIntent.putExtra("link", articlesList.get(position).url);
+
+                activity.startActivityForResult(articleDetailIntent, 0);
+            }
+        });
+
+    }
+    String convertLongToStringDate(Date date){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        return sdf.format(date);
     }
 
     @Override
